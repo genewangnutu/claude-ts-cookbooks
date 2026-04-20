@@ -1,0 +1,29 @@
+{
+  "name": "claude-ts-cookbooks",
+  "version": "1.0.0",
+  "description": "TypeScript examples and notebooks for building with the Claude API",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "check": "tsc --noEmit && npm run lint",
+    "lint": "eslint . --ext .ts",
+    "fix": "eslint --fix . --ext .ts && prettier --write .",
+    "format": "prettier --write .",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "dotenv": "^16.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.0.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0",
+    "prettier": "^3.0.0",
+    "ts-jest": "^29.0.0",
+    "typescript": "^5.0.0"
+  }
+}
