@@ -5,7 +5,7 @@ A collection of Jupyter notebooks and TypeScript examples for building with the 
 ## Quick Start
 
 ```bash
-# Install dependencies
+# Install @anthropic-ai/sdk and all dev dependencies
 npm install
 
 # Set up API key
@@ -83,11 +83,22 @@ style: lint/format
 
 ## Slash Commands
 
-These commands are available in Claude Code and CI:
+These commands are available in Claude Code:
 
 - `/notebook-review` - Review notebook quality
 - `/model-check` - Validate Claude model references
 - `/link-review` - Check links in changed files
+- `/commit-and-cleanup` - Stage and commit all uncommitted changes with a conventional-commit message, then remove any stale `.claude/worktrees/*` left over from previous Claude Code sessions
+
+## Worktree Hygiene
+
+Claude Code creates temporary worktrees under `.claude/worktrees/` during agentic tasks.
+These are normally deleted automatically, but may be left behind if a session is interrupted.
+
+Run `/commit-and-cleanup` at the end of any session to ensure:
+1. All work is committed with a meaningful message
+2. Stale worktrees are removed
+3. `git worktree prune` is run to clean metadata
 
 ## Project Structure
 
