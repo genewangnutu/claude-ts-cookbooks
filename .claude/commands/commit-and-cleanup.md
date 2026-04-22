@@ -6,14 +6,21 @@ Commit all uncommitted changes with an appropriate message, then clean up any st
 
 ### 1. Check for uncommitted changes
 
-Run `git status` to see the current state of the working tree.
+This command may run inside a git worktree. Always check **both** the current worktree and the main worktree:
 
-- If the working tree is **clean** (nothing to commit), skip to Step 3.
-- If there are **untracked or modified files**, continue to Step 2.
+```bash
+git worktree list                        # identify main worktree path (first entry)
+git status                               # current worktree
+git -C <main-worktree-path> status       # main worktree
+```
+
+- If **both** are clean (nothing to commit), skip to Step 3.
+- If **either** has staged, modified, or untracked files, continue to Step 2 for that worktree.
+- Commit each worktree separately if both have changes.
 
 ### 2. Stage and commit
 
-1. Run `git diff HEAD` and `git status` to read and understand all uncommitted changes.
+1. Run `git diff HEAD` and `git status` (and `git -C <main-worktree-path> diff HEAD` / `status` for the main worktree) to read and understand all uncommitted changes.
 2. Compose a concise, conventional-commit style message that accurately describes the changes:
    - Format: `<type>(<scope>): <short description>`
    - Types: `feat`, `fix`, `docs`, `style`, `refactor`, `chore`
