@@ -89,6 +89,7 @@ These commands are available in Claude Code:
 - `/model-check` - Validate Claude model references
 - `/link-review` - Check links in changed files
 - `/commit-and-cleanup` - Stage and commit all uncommitted changes with a conventional-commit message, then remove any stale `.claude/worktrees/*` left over from previous Claude Code sessions
+- `/refresh-worktree` - Create a fresh worktree based on the main branch's current commit, switch into it, and delete the old worktree and its branch
 
 ## Worktree Hygiene
 
