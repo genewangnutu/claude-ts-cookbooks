@@ -9,12 +9,14 @@ MAIN_REPO=$(dirname "$MAIN_GIT")
 WORKTREES_DIR="$MAIN_REPO/.claude/worktrees"
 ACTIVE_BRANCH=$(git -C "$MAIN_REPO" branch --show-current)
 CURRENT_COMMIT=$(git -C "$MAIN_REPO" rev-parse HEAD)
+OLD_BRANCH=$(git branch --show-current)
 NEW_NAME="local-$(date +%Y%m%d%H%M%S)"
 NEW_BRANCH="claude/$NEW_NAME"
 NEW_PATH="$WORKTREES_DIR/$NEW_NAME"
 echo "Repo       : $MAIN_REPO"
 echo "Branch     : $ACTIVE_BRANCH"
 echo "Commit     : $CURRENT_COMMIT"
+echo "Old branch : $OLD_BRANCH"
 echo "New path   : $NEW_PATH"
 echo "New branch : $NEW_BRANCH"
 ```
@@ -40,3 +42,8 @@ git -C "$MAIN_REPO" worktree remove "<path noted in Step 3>" --force
 ```
 
 **Step 6** — Report completion: display the new worktree path, branch name, base commit hash, and active branch name.
+
+**Step 7** — Delete the old branch if it is no longer needed:
+```bash
+git branch -D "$OLD_BRANCH"
+```

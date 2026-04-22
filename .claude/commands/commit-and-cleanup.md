@@ -55,14 +55,7 @@ git -C <main-worktree-path> status       # main worktree
 
 ### 3. Clean up stale worktrees
 
-1. Run `git worktree list` to list all worktrees.
-2. For each worktree whose path is under `.claude/worktrees/`:
-   a. Run `git worktree remove "<path>" --force`
-   b. If the directory still exists (e.g. locked by OS), delete it with:
-      - Windows: `Remove-Item -Recurse -Force "<path>"`
-      - Unix: `rm -rf "<path>"`
-3. Run `git worktree prune` to clean up any leftover metadata.
-4. Confirm with a final `git worktree list` — only the main worktree should remain.
+Run `/refresh-worktree` to create a fresh worktree based on the main branch's current commit, exit the current worktree, and delete both the old worktree directory and its branch. Follow all steps in that command, including Step 7 (delete old branch).
 
 ### 4. Report
 
