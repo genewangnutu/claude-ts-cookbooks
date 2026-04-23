@@ -1,5 +1,6 @@
-.env
+.claude/worktrees
 node_modules/
 dist/
+.env
 *.js.map
-.claude/worktrees
+task.md
