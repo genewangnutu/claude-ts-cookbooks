@@ -56,7 +56,9 @@ style: lint/format
 
 ## Key Rules
 
-1. **API Keys:** Never commit `.env` files. Use `dotenv` then access keys via `process.env.ANTHROPIC_API_KEY`.
+1. **Terminal:** Always use the `Bash` tool (Git Bash) for shell commands. Never use `PowerShell` unless explicitly requested by the user.
+
+2. **API Keys:** Never commit `.env` files. Use `dotenv` then access keys via `process.env.ANTHROPIC_API_KEY`.
 
 2. **Dependencies:** Use `npm install <package>` or `npm install --save-dev <package>`. Keep `package.json` and `package-lock.json` in sync.
 
