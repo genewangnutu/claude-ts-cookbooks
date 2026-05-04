@@ -6,34 +6,29 @@ TypeScript versions of the Claude Cookbooks — code and guides for building wit
 
 - A Claude API key (sign up for free at [console.anthropic.com](https://console.anthropic.com/settings/keys))
 - [Node.js](https://nodejs.org/) v18 or higher
-- [npm](https://www.npmjs.com/) v9 or higher
+- [npm](https://www.npmjs.org/) v9 or higher
+- [Deno](https://deno.com/) v1.37 or higher
 
-All notebooks use the **tslab** kernel to execute TypeScript directly inside Jupyter. See [CONTRIBUTING.md](CONTRIBUTING.md) for full setup instructions.
+All notebooks use the **Deno** kernel to execute TypeScript directly inside Jupyter. See [CONTRIBUTING.md](CONTRIBUTING.md) for full setup instructions.
 
 ## Quick Start
 
 ```bash
-# 1. Install project dependencies
+# 1. Install project dependencies (for dev tools: ESLint, Prettier, tsc, etc.)
 npm install
 
 # 2. Copy and fill in your API key
 cp .env.example .env
 # Edit .env → set ANTHROPIC_API_KEY=sk-ant-...
 
-# 3. Install the TypeScript Jupyter kernel (one-time setup)
-npm install -g tslab
-tslab install
+# 3. Install Deno (if not already installed)
+# See https://docs.deno.com/runtime/getting_started/installation/
 
-# 4. Open any notebook and select the "TypeScript (tslab)" kernel
-```
+# 4. Register the Deno kernel with Jupyter (one-time setup)
+deno jupyter --install
 
-## Explore Further
+# 5. Verify the kernel is installed
+jupyter kernelspec list
+# You should see "deno" in the output
 
-- [Anthropic developer documentation](https://docs.anthropic.com)
-- [Anthropic TypeScript SDK](https://github.com/anthropics/anthropic-sdk-typescript)
-- [Anthropic Discord community](https://www.anthropic.com/discord)
-
-## Table of Recipes
-
-### Misc
-- [Prompting Claude for "JSON Mode"](misc/how_to_enable_json_mode.ipynb) — Reliable structured JSON output using prefill and XML tags
+# 6. Open any notebook and select the "Deno" kernel
