@@ -26,31 +26,56 @@ git -C <main-worktree-path> status       # main worktree
    - Types: `feat`, `fix`, `docs`, `style`, `refactor`, `chore`
    - Keep the subject line under 72 characters
    - If changes span multiple concerns, write a multi-line body
-3. **If any `.ipynb` files are being committed, verify nbstripout before staging:**
-   a. Check that nbstripout is installed and reachable via the configured Python:
+3. **If any `.ipynb` files are being committed, strip outputs BEFORE staging — this is mandatory:**
+
+   > **Why this matters:** `.gitattributes` may reference a `nbstripout` git filter, but if the filter is not configured in git config, `git add` will silently stage notebooks with outputs intact. Always strip manually to guarantee clean commits.
+
+   a. Find the Python executable that has nbstripout installed:
       ```bash
-      git config filter.nbstripout.clean   # shows the configured command
-      <python> -m nbstripout --version     # must succeed
+      python3.10 -m nbstripout --version   # try until one works
+      python3 -m nbstripout --version
+      python -m nbstripout --version
       ```
-   b. For each `.ipynb` in the changeset, confirm the filter strips correctly:
+      **If none work:** install nbstripout (`pip install nbstripout`) before proceeding. Do not skip this.
+
+   b. **Strip every `.ipynb` in the changeset in-place before staging:**
       ```bash
-      <python> -m nbstripout < notebook.ipynb | <python> -c "
-      import sys, json; nb = json.load(sys.stdin)
-      cells = [c for c in nb['cells'] if c['cell_type']=='code']
-      assert all(c['outputs'] == [] for c in cells), 'outputs not stripped!'
-      assert all(c['execution_count'] is None for c in cells), 'exec_count not stripped!'
-      print('nbstripout OK')
+      python3.10 -m nbstripout {path}/my_notebook.ipynb   # repeat for each .ipynb
+      ```
+
+   c. Verify each stripped notebook has no outputs:
+      ```bash
+      python3.10 -c "
+      import json
+      nb = json.load(open('{path}/my_notebook.ipynb', encoding='utf-8'))
+      cells = [c for c in nb['cells'] if c.get('cell_type')=='code']
+      assert all(c.get('outputs') == [] for c in cells), 'outputs not stripped!'
+      assert all(c.get('execution_count') is None for c in cells), 'exec_count not stripped!'
+      print('nbstripout OK: all outputs cleared')
       "
       ```
-   c. If nbstripout is missing or the assertion fails, **do not commit** — fix the filter first.
+      **If the assertion fails, do not proceed — re-run step 3b and check again.**
+
+   d. Optionally check git filter status (informational only — manual strip above is the real enforcement):
+      ```bash
+      git config filter.nbstripout.clean   # empty = filter not configured (OK, we already stripped manually)
+      ```
+
 4. Run `git add .`
 5. Run `git commit -m "<message>"`
 6. **After committing, verify the committed notebook is clean:**
    ```bash
-   git show HEAD:<path/to/notebook.ipynb> | <python> -m nbstripout > /tmp/_stripped.ipynb
-   diff <(git show HEAD:<path/to/notebook.ipynb>) /tmp/_stripped.ipynb \
-     && echo "committed notebook is clean" \
-     || echo "WARNING: committed notebook differs from nbstripout output"
+   python3.10 -c "
+   import subprocess, json
+   raw = subprocess.check_output(['git', 'show', 'HEAD:thinking/my_notebook.ipynb'])
+   nb = json.loads(raw)
+   cells = [c for c in nb['cells'] if c.get('cell_type')=='code']
+   dirty = [i for i,c in enumerate(cells) if c.get('outputs') or c.get('execution_count') is not None]
+   if dirty:
+       print('WARNING: committed notebook still has outputs in cells:', dirty)
+   else:
+       print('committed notebook is clean')
+   "
    ```
 
 ### 3. Clean up stale worktrees
